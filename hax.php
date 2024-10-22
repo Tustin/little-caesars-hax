@@ -6,6 +6,12 @@ use Carbon\Carbon;
 use Ramsey\Uuid\Uuid;
 use GuzzleHttp\Client;
 
+$ip = file_get_contents('https://api.ipify.org?format=json');
+
+$ip = json_decode($ip, true);
+
+echo 'IP: ' . $ip['ip'] . PHP_EOL;
+
 $client = new Client([
     'headers' => [
         'Accept' => 'application/json',
@@ -13,8 +19,7 @@ $client = new Client([
         'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:131.0) Gecko/20100101 Firefox/131.0',
         'Accept-Language' => 'en-US',
     ],
-    'proxy' => 'http://192.168.0.121:8888',
-    'verify' => false,
+    'timeout' => 30,
 ]);
 
 $fingerprint = Uuid::uuid4()->toString();
