@@ -38,6 +38,8 @@ $data = json_decode($response->getBody()->getContents(), true);
 
 $processKey = $data['process_key'];
 
+echo 'Process key: ' . $processKey . PHP_EOL;
+
 // Generate JWT
 $response = $client->post('https://auth-api.prod.fooji.com/auth/anonymous', [
     'json' => [
@@ -71,6 +73,8 @@ if ($data['success'] !== true) {
 }
 
 $jwt = $data['jwt'];
+
+echo 'JWT: ' . $jwt . PHP_EOL;
 
 $response = $client->put('https://auth-api.prod.fooji.com/me', [
     'headers' => [
@@ -133,7 +137,7 @@ $response = $client->post('https://front-end-api.prod.fooji.com/v1/user/activate
     'headers' => [
         'Authorization' => 'Bearer ' . $jwt,
     ],
-    'json' => []
+    'body' => '{}',
 ]);
 
 if ($response->getStatusCode() !== 200) {
@@ -142,7 +146,7 @@ if ($response->getStatusCode() !== 200) {
 
 // Ping the campaign user until its finished
 while (true) {
-    $response = $client->get('https://front-end-api.prod.fooji.com/v1/campaign/continue', [
+    $response = $client->get('https://front-end-api.prod.fooji.com/v1/campaign-user', [
         'headers' => [
             'Authorization' => 'Bearer ' . $jwt,
         ]
